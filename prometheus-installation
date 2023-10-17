@@ -8,12 +8,11 @@ cd prometheus-2.45.1.linux-amd64/
 
 
 ls -al
-
+you will see several files. the most important ones are
 
 prometheus file is the application executable
 
 prometheuus.yml is the config file
-
 
 promtool is a command-line utility
 
