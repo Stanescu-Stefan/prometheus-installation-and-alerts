@@ -1,0 +1,35 @@
+
+
+wget https://github.com/prometheus/prometheus/releases/download/v2.45.1/prometheus-2.45.1.linux-amd64.tar.gz
+
+tar xvf prometheus-2.45.1.linux-amd64.tar.gz
+
+cd prometheus-2.45.1.linux-amd64/
+
+
+ls -al
+
+
+prometheus file is the application executable
+
+prometheuus.yml is the config file
+
+
+promtool is a command-line utility
+
+
+to check if prometheus can start with issues, run ./prometheus
+
+we can go and check http://localhost:9090/ on your local machine to see the Prometheus expression browser.
+
+You can type up, you should see 1 target in an up state, prometheus itself
+
+
+up{instance=""locahost:9090", job="prometheus"}                    1
+
+When we start Prometheus by running ./prometheus, it will start running in the foreground and also it will not start on boot.
+
+so we need to configure it as a Systemd service unit so we could do systemctl start prometheus
+
+
+first we need to create a prometheus user.
