@@ -139,4 +139,4 @@ sudo systemctl enable prometheus
 
 #Node exporters expose the metrics from the node they are installed on, so that the prometheus server can scrape that endpoint
 
-
+To install Node exporter, we need to access https://prometheus.io/download and select node_exporter
