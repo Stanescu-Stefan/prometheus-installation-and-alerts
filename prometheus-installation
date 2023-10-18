@@ -139,4 +139,27 @@ sudo systemctl enable prometheus
 
 #Node exporters expose the metrics from the node they are installed on, so that the prometheus server can scrape that endpoint
 
-To install Node exporter, we need to access https://prometheus.io/download and select node_exporter
+#To install Node exporter, we need to access https://prometheus.io/download and select node_exporter
+#Copy the URL, by right-clicking and selecting copy link address and then downloaded with wget
+
+wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
+
+
+#After it has been downloaded, we need to untar it
+
+tar -xvf node_exporter-1.6.1.linux-amd64.tar.gz
+
+#We move into that folder
+
+cd node_exporter-1.6.1.linux-amd64
+
+#After we list the contents of the directory, ls -l, we see 1 file executable for the node_exporter
+
+#We test the node_exporter by running ./node_exporter
+
+#Then we can do a curl command on localhost on 9100 to check if its working in a new tab of the terminal
+#since the node_exporter has been started in the foreground
+
+curl localhost:9100/metrics
+
+#We can then see the metrics served and they are able to be scraped by Prometheus
