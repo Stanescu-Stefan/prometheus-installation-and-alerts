@@ -1,84 +1,91 @@
 
+#To install Prometheus, we need to access https://prometheus.io/download
+#Then we download the tarball to our server
 
 wget https://github.com/prometheus/prometheus/releases/download/v2.45.1/prometheus-2.45.1.linux-amd64.tar.gz
 
+#We unarchive the downloaded file
+
 tar xvf prometheus-2.45.1.linux-amd64.tar.gz
 
+#After unarchiving it, we go into the unarchived directory
 cd prometheus-2.45.1.linux-amd64/
 
+#We check the available files and directories
 
 ls -al
-you will see several files. the most important ones are
 
-prometheus file is the application executable
-
-prometheuus.yml is the config file
-
-promtool is a command-line utility
+#You will see several files. the most important ones are
+#prometheus file is the application executable
+#prometheuus.yml is the config file
+#promtool is a command-line utility
 
 
-to check if prometheus can start with issues, run ./prometheus
+#To check if prometheus can start with issues, run ./prometheus
 
-we can go and check http://localhost:9090/ on your local machine to see the Prometheus expression browser.
+#We can go and check http://localhost:9090/ on your local machine to see the Prometheus expression browser.
 
-You can type up, you should see 1 target in an up state, prometheus itself
+#You can type up, you should see 1 target in an up state, prometheus itself
 
 
 up{instance=""locahost:9090", job="prometheus"}                    1
 
-When we start Prometheus by running ./prometheus, it will start running in the foreground and also it will not start on boot.
+#When we start Prometheus by running ./prometheus, it will start running in the foreground and also it will not start on boot.
+#So we need to configure it as a Systemd service unit so we could do systemctl start prometheus
 
-so we need to configure it as a Systemd service unit so we could do systemctl start prometheus
 
-
-first we need to create a prometheus user.
+#First we need to create a prometheus user.
 
 sudo useradd --no-create-home --shell /bin/false prometheus
 
-so the user cant login in
+#So the user cant login in
 
+#After that we need to create directories to move some our prometheus files
 sudo mkdir /etc/prometheus (to store the prometheus.yml, a config file)
 
 sudo mkdir /var/lib/prometheus(to store the time series data)
 
+#We change the ownership of these directories to the prometheus user/group
 sudo chown prometheus:prometheus /etc/prometheus
 
 sudo chown prometheus:prometheus /var/lib/prometheus
 
 
 
-now we copy the prometheus executable to /usr/local/bin/
+#Now we copy the prometheus executable to /usr/local/bin/
 
 sudo cp prometheus /usr/local/bin/
 
 sudo cp promtool /usr/local/bin/
 
-also update the permissions of both those files
+#We change the ownership of these directories to the prometheus user/group
 
 sudo chown prometheus:prometheus /usr/local/bin/prometheus
 
 sudo chown prometheus:prometheus /usr/local/bin/promtool
 
-copy the console folder
+#Copy the consoles and console libraries folder
 
 sudo cp -r consoles /etc/prometheus
 
 sudo cp -r console_libraries /etc/prometheus
 
-also update the permissions
+#We change the ownership of these directories to the prometheus user/group
 
 sudo chown -R prometheus:prometheus /etc/prometheus/consoles
 
 sudo chown -R prometheus:prometheus /etc/prometheus/console_libraries
 
-next we copy the configuration file
+#Next we copy the configuration file
 
 sudo cp prometheus.yml /etc/prometheus/
+
+#We change the ownership of this file to the prometheus user/group
 
 sudo chown prometheus:prometheus /etc/prometheus/prometheus.yml
 
 
-after that the command to start the prometheus is:
+#After that the command to start the prometheus is:
 
 
 sudo -u prometheus /usr/local/bin/prometheus \
@@ -88,11 +95,12 @@ sudo -u prometheus /usr/local/bin/prometheus \
 --web.console.libraries=/etc/prometheus/console_libraries
 
 
-the next thing we need to create a unit service file for our prometheus server service
+#The next thing we need to create a unit service file for our prometheus server service
 
 
 sudo vi /etc/systemd/system/prometheus.service
 
+#Copy the following text into the systemd service unit file
 
 [Unit]
 Description=Prometheus
@@ -113,14 +121,22 @@ ExecStart=/usr/local/bin/prometheus \
 WantedBy=multi-user.target
 
 
-Since we changed a Systemd unit file we need to do the following command:
+#Since we changed a Systemd unit file we need to do the following command:
 
 sudo systemctl daemon-reload
 
-Then start prometheus
+#Then start prometheus
 
 sudo systemctl start prometheus
 
-Also enable it
+#Also enable it
 
 sudo systemctl enable prometheus
+
+
+
+#*****************************NODE EXPORTER******************************
+
+#Node exporters expose the metrics from the node they are installed on, so that the prometheus server can scrape that endpoint
+
+
