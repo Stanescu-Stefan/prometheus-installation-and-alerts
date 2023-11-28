@@ -35,8 +35,9 @@ up{instance=""locahost:9090", job="prometheus"}                    1
 
 
 #First we need to create a prometheus user.
+# M is option for no home directory, -r is for system account and -s is for shell
 
-sudo useradd --no-create-home --shell /bin/false prometheus
+sudo useradd -Mr -s /bin/false prometheus
 
 #So the user cant login in
 
